@@ -68,7 +68,7 @@
     if (!question.on_drawings) {
       var invented = answer.parts.some(function (p) { return p.number === question.part_number; }) ||
         answer.drawing_citations.some(function (c) { return c.part_number === question.part_number; });
-      bits.push(invented ? ["bad", "Treated a number the patent does not use as a part"] : ["good", "Recognised that the patent does not use this number"]);
+      bits.push(invented ? ["bad", "Treated a number the patent does not use as a part"] : ["good", "Named no part and cited no region for this unused number"]);
       return bits;
     }
     bits.push(answer.name_correct ? ["good", "Name matches the gold"] : ["bad", "Name does not match the gold (" + question.gold_names.join(" / ") + ")"]);

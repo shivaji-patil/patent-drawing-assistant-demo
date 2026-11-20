@@ -21,14 +21,14 @@
     <p class="lede">Every citation is checked in code before it is shown: a quote must occur in the passage it cites, and a drawing
     citation must point at a label the OCR reader actually found. The LLM is measured against a version without an LLM.</p>
     <div class="kpis">
-      <div><b>100%</b><span>of parts named correctly with the LLM (36/36), against 92% without it</span></div>
-      <div><b>80%</b><span>of drawing regions found (63/79), the same with or without the LLM</span></div>
+      <div><b>100%</b><span>of parts named correctly with the LLM (36/36), against 83% without it</span></div>
+      <div><b>80%</b><span>of the asked parts' places on the drawings found by the lookup (63/79); the LLM system returned 61/79 after its image check</span></div>
       <div><b>86.4%</b><span>recall of the drawing reader on a blind set of 40 sheets (309 labels); precision 78.8%</span></div>
       <div><b>$0.17</b><span>per question at list price for the full LLM system, 12 s on average</span></div>
     </div>
     <p class="note">The first, second and fourth figures come from a development set of 42 questions on 6 patents, not a blind test,
     and its gold answers were made by Claude subagents and have not been checked by a person. More under "How firm are these results?".</p>
-    <p class="note">Last updated <mark class="ts">20 Nov 2026, 14:04 UTC (20 Nov, 10:34 NST)</mark>.</p>
+    <p class="note">Last updated <mark class="ts">20 Nov 2026, 16:07 UTC (20 Nov, 12:37 NST)</mark>.</p>
   </div>
 </header>
 <main class="wrap">
@@ -39,10 +39,10 @@
     (<code>D5-23</code>: sheet 5, spot 23), and the description into numbered sentences (<code>T148</code>). Answers may only cite these.</li>
     <li><b>Three systems, one output format.</b> A lookup with no LLM, an LLM that sees only the text, and an LLM that also sees the label
     list and then has every cited drawing region checked against the image crop. Same scorer for all three.</li>
-    <li><b>The LLM helps with naming, not with finding.</b> It named all 36 parts; the lookup missed 3. But both stop at the regions the drawing
-    reader found (63/79): the LLM cannot cite a label the reader missed, so it found the same regions the lookup did.</li>
-    <li><b>The image check was not worth its cost.</b> Showing the model each cited crop added 0.8 model requests and 2.5 s per question,
-    and lowered recall by 2 regions. It had no junk to remove: precision was already 100%.</li>
+    <li><b>The LLM helps with naming, not with finding.</b> It named all 36 parts; the lookup missed 6. But both stop at the regions the drawing
+    reader found (63/79): the LLM cannot cite a label the reader missed, so before its image check it cited the same regions the lookup did.</li>
+    <li><b>The image check was not worth its cost.</b> The full system, which shows the model each cited crop, used 0.8 more model requests and took 2.5 s longer
+    per question than the text-only one, and the check lowered recall by 2 regions. It had no junk to remove: precision was already 100%.</li>
     <li><b>The drawing reader was tested blind, with the rules frozen first.</b> On 40 sheets from patents never used before, scored once:
     recall 86.4%, precision 78.8%. Short labels and chart-heavy sheets are where it fails.</li>
   </ul>
@@ -136,11 +136,11 @@ Where it appears on the drawings: the reader found label 26 once on each of FIGs
   <div class="scroll"><table>
     <thead><tr><th>Measure</th><th>ocr_lookup<br><span class="n">no LLM</span></th><th>text_only<br><span class="n">LLM, text</span></th><th>full<br><span class="n">LLM, text + drawings</span></th></tr></thead>
     <tbody>
-      <tr><td>Part name correct</td><td>33/36 = 92% <span class="n">[78–97%]</span></td><td>36/36 = 100% <span class="n">[90–100%]</span></td><td>36/36 = 100% <span class="n">[90–100%]</span></td></tr>
+      <tr><td>Part name correct</td><td>30/36 = 83% <span class="n">[68–92%]</span></td><td>36/36 = 100% <span class="n">[90–100%]</span></td><td>36/36 = 100% <span class="n">[90–100%]</span></td></tr>
       <tr><td>At least one verified quote</td><td>34/36 = 94%</td><td>36/36 = 100%</td><td>36/36 = 100%</td></tr>
       <tr><td>Drawing regions found (recall)</td><td>63/79 = 80% <span class="n">[70–87%]</span></td><td>n/a <span class="n">no drawings</span></td><td>61/79 = 77% <span class="n">[67–85%]</span></td></tr>
       <tr><td>Drawing regions correct (precision)</td><td>63/63 = 100% <span class="n">[94–100%]</span></td><td>n/a <span class="n">no drawings</span></td><td>61/61 = 100% <span class="n">[94–100%]</span></td></tr>
-      <tr><td>Unused number recognised as unused</td><td>6/6</td><td>6/6</td><td>6/6</td></tr>
+      <tr><td>Unused number: no part named, no region cited</td><td>6/6</td><td>6/6</td><td>6/6</td></tr>
       <tr><td>Quotes kept / rejected by the check</td><td>34 / 0</td><td>174 / 3</td><td>149 / 0</td></tr>
       <tr><td>Time per question (mean)</td><td>&lt; 0.01 s</td><td>9.9 s</td><td>12.4 s</td></tr>
       <tr><td>Model requests / input tokens per question</td><td>0.0 / 0</td><td>1.0 / 17,640</td><td>1.8 / 20,290</td></tr>
@@ -153,8 +153,9 @@ Where it appears on the drawings: the reader found label 26 once on each of FIGs
   identical counts, so their agreement says little (see "How firm are these results?"). Requests ran 4 at a time, so the times include that contention.</p>
   <h3>What this shows</h3>
   <ul>
-    <li><b>Names.</b> The LLM named all 36 parts; the lookup gave one wrong name and two with no name. The gold names were written by the same model family that is being
-    tested, so this gap is weaker evidence than it looks.</li>
+    <li><b>Names.</b> The LLM named all 36 parts; the lookup missed 6 (a wrong name, only part of the name, or none). The gold names were written by the same
+    model family that is being tested, so this gap is weaker evidence than it looks. The name rule was tightened on 20 November 2026 after an independent review: the first rule
+    accepted any answer contained in the gold name, even "system" for "material supply system", and gave the lookup 33.</li>
     <li><b>Regions.</b> Before its image check the full system cited exactly the regions the lookup did (63/79 found, none wrong). All 16 missed regions are labels the
     reader missed; 8 of them are the single-digit label <code>3</code> on one patent. Better finding has to come from the reader, not the prompt.</li>
     <li><b>Precision of 100% here does not contradict the reader's 78.8% below.</b> The reader's junk is mostly chart values and table cells, which are rarely numbers someone asks about by name.</li>
@@ -176,7 +177,7 @@ Where it appears on the drawings: the reader found label 26 once on each of FIGs
       <figcaption><code>52</code>, rejected as "32". The label is printed in a stipple pattern and cannot be read with confidence.</figcaption>
     </figure>
   </div>
-  <p>Net effect: recall fell from 63/79 to 61/79, at 0.8 extra model requests and 2.5 s per question.
+  <p>Net effect: recall fell from 63/79 to 61/79. The full system used 0.8 more model requests and took 2.5 s longer per question than the text-only one.
   It would only pay where the cited regions contain junk, and on this question form they did not.</p>
 </section>
 
@@ -229,6 +230,9 @@ Where it appears on the drawings: the reader found label 26 once on each of FIGs
     which is better evidence but still not a person. The name comparison tests Claude against Claude.</li>
     <li><b>The reader's blind numbers are not exactly repeatable.</b> The OCR engine keeps the thresholds of its previous call, so the first sheet a process read was treated differently
     from later ones, and a rerun can differ by a few labels. Found on 20 November 2026 and fixed in the next version of the reader.</li>
+    <li><b>Region scores compare counts, not positions.</b> The gold says how many times a label is printed on each sheet. A cited region counts as correct when the sheet has that many
+    prints of the part; nobody has checked each box against the image. Regions the LLM cites for parts that were not asked about (25 in this set) are counted, not scored.</li>
+    <li><b>Questions on one patent are not independent,</b> so the intervals above are too narrow. One patent supplies 12 of the 16 missed regions: without it the lookup finds 92%, without the best one 76%.</li>
     <li><b>Small samples.</b> 36 questions and 79 regions give intervals 15 to 20 points wide; the reader's blind sets are 30 and 40 sheets.</li>
     <li><b>One question form.</b> No questions about relations between parts, about figures, or across several parts.</li>
     <li><b>What is firm:</b> blind4 and blind5 were each scored once, with the rules fixed in writing beforehand; failed attempts are reported alongside the adopted ones.</li>
@@ -241,6 +245,7 @@ Where it appears on the drawings: the reader found label 26 once on each of FIGs
     <li>Region finding is capped by the drawing reader: a label it misses cannot be cited, however good the model is.</li>
     <li>Patents only, from the OCR of published PDFs; text OCR drops spaces and occasionally keeps a gutter line number, which quotes then reproduce.</li>
     <li>Two prints of the same label closer than about 120 × 60 px are merged into one spot.</li>
+    <li>The answer's prose is not rewritten after the checks: it can still mention a region that the checks removed.</li>
     <li>Only the Claude Code login path has been run; the direct API path is written but untested.</li>
   </ul>
 </section>
@@ -248,9 +253,10 @@ Where it appears on the drawings: the reader found label 26 once on each of FIGs
 <section>
   <h2>Next steps</h2>
   <ul>
-    <li>A blind question set from fresh patents, with the gold checked by a person, including questions by part name and about relations between parts.</li>
-    <li>Better recall on short and single-digit labels, the reader's main gap, since it caps every system.</li>
-    <li>Use the image check only where the reader's spot is doubtful (chart or table sheets, low read counts), instead of on every citation.</li>
+    <li><b>Under way, not yet scored:</b> a blind question set on 8 patents never used before, written down in advance: questions by part number, by part name, about one figure and
+    about two parts together, with the gold counted by a person. Three versions are frozen for it: this one; one with a reader that handles drawings printed as a dot pattern
+    (on development sheets it finds 89% of the asked places instead of 80%); and one with a different OCR engine (95% on development sheets). Development figures are not results.</li>
+    <li>After that: check each cited box against the image, not only the count per sheet.</li>
   </ul>
 </section>
 
