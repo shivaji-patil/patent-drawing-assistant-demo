@@ -28,7 +28,7 @@
     </div>
     <p class="note">The first, second and fourth figures come from a development set of 42 questions on 6 patents, not a blind test,
     and its gold answers were made by Claude subagents and have not been checked by a person. More under "How firm are these results?".</p>
-    <p class="note">Last updated <mark class="ts">20 Nov 2026, 12:00 UTC (20 Nov, 08:30 NST)</mark>.</p>
+    <p class="note">Last updated <mark class="ts">20 Nov 2026, 14:04 UTC (20 Nov, 10:34 NST)</mark>.</p>
   </div>
 </header>
 <main class="wrap">
@@ -149,7 +149,8 @@ Where it appears on the drawings: the reader found label 26 once on each of FIGs
   </table></div>
   <p class="small">Gold: two counters listed every label on every sheet from image tiles, without seeing the reader's output, and agreed on all 387 label/sheet pairs;
   a third recount of the 36 chosen parts matched on all of them. Part names were taken from the text by one agent and checked by a second, which changed 4 of the 36.
-  All of them were Claude subagents. Requests ran 4 at a time, so the times include that contention.</p>
+  All of them were Claude subagents, and the two counters were the same model: a later test showed that two such counters return
+  identical counts, so their agreement says little (see "How firm are these results?"). Requests ran 4 at a time, so the times include that contention.</p>
   <h3>What this shows</h3>
   <ul>
     <li><b>Names.</b> The LLM named all 36 parts; the lookup gave one wrong name and two with no name. The gold names were written by the same model family that is being
@@ -223,8 +224,11 @@ Where it appears on the drawings: the reader found label 26 once on each of FIGs
   <h2>How firm are these results?</h2>
   <ul>
     <li><b>The assistant has no blind test yet.</b> It was written and debugged with the six development patents in view.</li>
-    <li><b>No person has checked the gold.</b> Label counts and part names were made by Claude subagents working from images, with independent double counts. The agreement between counters
-    is high, but agreement is not truth, and the name comparison tests Claude against Claude.</li>
+    <li><b>No person has checked the gold.</b> Label counts and part names were made by Claude subagents working from images. The "two independent counters" were not independent:
+    on a later set, two counters of the same model returned the same count on all 315 label/sheet pairs, most files byte for byte. A third count by a different Claude model also agreed,
+    which is better evidence but still not a person. The name comparison tests Claude against Claude.</li>
+    <li><b>The reader's blind numbers are not exactly repeatable.</b> The OCR engine keeps the thresholds of its previous call, so the first sheet a process read was treated differently
+    from later ones, and a rerun can differ by a few labels. Found on 20 November 2026 and fixed in the next version of the reader.</li>
     <li><b>Small samples.</b> 36 questions and 79 regions give intervals 15 to 20 points wide; the reader's blind sets are 30 and 40 sheets.</li>
     <li><b>One question form.</b> No questions about relations between parts, about figures, or across several parts.</li>
     <li><b>What is firm:</b> blind4 and blind5 were each scored once, with the rules fixed in writing beforehand; failed attempts are reported alongside the adopted ones.</li>
