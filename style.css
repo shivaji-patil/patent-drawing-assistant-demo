@@ -1,0 +1,98 @@
+/* Monokai Pro (default filter): one dark theme, whatever the visitor's system setting or data-theme.
+   Same theme as the author's other demo site. */
+:root, :root[data-theme="light"], :root[data-theme="dark"] { color-scheme:dark;
+  --bg:#2d2a2e; --panel:#221f22; --deep:#19181a;
+  --ink:#fcfcfa; --muted:#c1c0c0; --faint:#939293; --line:#403e41; --line-strong:#5b595c;
+  --pink:#ff6188; --orange:#fc9867; --yellow:#ffd866; --green:#a9dc76; --cyan:#78dce8; --purple:#ab9df2;
+  --link:var(--cyan); --soft:var(--panel); --accent:var(--cyan); }
+* { box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; background:var(--bg); }
+body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+::selection { background:var(--line-strong); color:var(--ink); }
+.wrap { max-width:1080px; margin:0 auto; padding:0 16px; }
+/* Cyan is only 1.55:1 against body text, so links keep a faint underline at rest and a solid one on hover. */
+a, a:visited { color:var(--link); text-decoration:underline; text-decoration-color:rgba(120,220,232,.45); text-underline-offset:.15em; }
+a:hover { text-decoration-color:currentColor; text-decoration-thickness:2px; }
+a:focus-visible, summary:focus-visible { outline:2px solid var(--yellow); outline-offset:2px; border-radius:2px; }
+code { background:var(--deep); color:var(--orange); padding:.1em .3em; border-radius:4px; }
+a code { color:inherit; }
+.hero { background:var(--deep); color:var(--ink); padding:48px 0 36px; border-bottom:1px solid var(--line); }
+.eyebrow { text-transform:uppercase; letter-spacing:.08em; font-size:13px; color:var(--faint); margin:0 0 8px; }
+h1 { font-size:clamp(28px,5vw,42px); line-height:1.15; margin:0 0 14px; }
+.lede { font-size:18px; max-width:760px; margin:0; }
+.kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin:26px 0 12px; }
+.kpis div { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px 14px; }
+.kpis b { display:block; font-size:30px; line-height:1.1; color:var(--purple); }
+.kpis span { font-size:14px; color:var(--muted); }
+.lede.plain { font-size:20px; margin-bottom:14px; }
+.kpis.light div { background:var(--panel); border-color:var(--line); color:inherit; }
+.kpis.light span { color:var(--muted); }
+.note { font-size:14px; color:var(--muted); margin:6px 0 0; }
+mark.ts { background:var(--yellow); color:var(--bg); padding:0 .25em; border-radius:3px; }
+.cta { margin:16px 0 0; display:flex; flex-wrap:wrap; gap:8px; }
+.cta a, .cta a:visited { display:inline-block; background:var(--cyan); color:var(--bg); font-weight:600; text-decoration:none; padding:8px 14px; border-radius:8px; }
+.cta a:hover { text-decoration-line:underline; text-decoration-thickness:2px; text-underline-offset:.15em; }
+section { padding:30px 0 6px; border-bottom:1px solid var(--line); }
+h2 { font-size:24px; margin:0 0 12px; }
+h3 { font-size:18px; margin:22px 0 8px; }
+.small { font-size:14px; color:var(--muted); }
+.muted { color:var(--faint); font-size:0.9em; }
+.steps { list-style:none; counter-reset:s; padding:0; margin:0 0 16px; display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:10px; }
+.steps li { counter-increment:s; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:10px 12px; }
+.steps li b::before { content:counter(s) ". "; color:var(--purple); }
+.steps li span { display:block; font-size:14px; color:var(--muted); }
+figure { margin:14px 0; }
+/* Patent drawings and crops are black on white: show them on a white card. */
+figure img { width:100%; height:auto; display:block; border:1px solid var(--line); border-radius:10px; background:#fff; padding:8px; }
+figcaption { font-size:14px; color:var(--muted); margin-top:6px; }
+.wide img { max-width:100%; }
+.grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:18px; }
+.grid3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; align-items:start; }
+.scroll td.why { text-align:left; min-width:220px; }
+.scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:10px 0; scrollbar-color:var(--line-strong) transparent; }
+table { border-collapse:collapse; width:100%; font-size:14px; font-variant-numeric:tabular-nums; }
+th, td { padding:6px 8px; border-bottom:1px solid var(--line); text-align:right; white-space:nowrap; }
+th:first-child, td:first-child { text-align:left; }
+thead th { background:var(--panel); color:var(--ink); font-weight:600; white-space:normal; vertical-align:bottom; border-bottom-color:var(--line-strong); }
+tbody tr:hover { background:var(--panel); }
+tr.total th, tr.total td { font-weight:700; }
+td.good { color:var(--green); }
+td.bad { color:var(--pink); }
+.n { color:var(--faint); font-size:12px; }
+details { margin:12px 0; } summary { cursor:pointer; color:var(--link); }
+summary:hover { text-decoration:underline; }
+.sw { display:inline-block; width:12px; height:12px; border-radius:50%; border:2px solid var(--c); vertical-align:-1px; }
+.sources ul { font-size:14px; color:var(--muted); }
+footer { padding:22px 0 36px; color:var(--muted); font-size:14px; }
+section.summary { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:4px 22px 10px; margin-top:28px; }
+section.summary li { margin:8px 0; }
+/* Print the dark backgrounds too: without them the near-white text would land on white paper. */
+@media print { html, body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }
+
+/* review polish (5 Nov 2026) */
+.cta a, .cta a:visited { background:rgba(120,220,232,.10); color:var(--cyan); border:1px solid rgba(120,220,232,.55); }
+.cta a:hover { background:rgba(120,220,232,.18); border-color:var(--cyan); }
+code { padding:0 .25em; border:1px solid var(--line); white-space:nowrap; }
+section.summary code { background:var(--bg); }
+@media (max-width:700px) { thead th { white-space:nowrap; } }
+.scroll td.why { white-space:normal; min-width:260px; }
+figure.wide > img[src$=".svg"] { max-width:760px; }
+figure img { filter:brightness(.94); }
+mark.ts { white-space:nowrap; }
+@media (max-width:640px) { section.summary { padding:4px 14px 10px; } section.summary ul { padding-left:18px; } }
+
+
+/* Worked example: a question, the answer, and each citation with the check it passed. */
+.qa { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px 18px; margin:14px 0; }
+.qa .q { font-weight:600; color:var(--yellow); margin:0 0 6px; }
+.qa .a { margin:0; white-space:pre-line; }
+.cites { list-style:none; padding:0; margin:10px 0; display:grid; gap:10px; }
+.cites li { background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--green); border-radius:8px; padding:10px 14px; font-size:15px; }
+.cites li.rej { border-left-color:var(--pink); }
+.cites .id { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; color:var(--purple); margin-right:.4em; }
+.cites .ok { color:var(--green); font-size:13px; white-space:nowrap; }
+.cites .passage { display:block; color:var(--muted); font-size:14px; margin-top:4px; }
+mark.quote { background:rgba(169,220,118,.22); color:var(--ink); padding:0 .1em; border-radius:3px; }
+figure.sheet img { max-width:560px; margin:0 auto; }
+figure.crops img { max-width:420px; }
+.tag { display:inline-block; font-size:12px; border:1px solid var(--line-strong); border-radius:999px; padding:0 8px; color:var(--muted); vertical-align:2px; }
