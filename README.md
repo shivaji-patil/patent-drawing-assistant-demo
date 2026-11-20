@@ -13,4 +13,8 @@ The text and figures are licensed under [PolyForm Noncommercial 1.0.0](https://p
 (source-available, not open source); commercial use needs the author's permission. The patent drawings shown are from
 US patent documents published by the USPTO; third-party software is credited on the page under "Data and licences".
 
-Required Notice: Copyright 2026 Shivaji Patil
+Required Notice: Copyright 2026 Shivaji Patil (shivaji@shivajipatil.com)
+
+## Contact
+
+Shivaji Patil, St. John's, NL · [shivaji@shivajipatil.com](mailto:shivaji@shivajipatil.com)
