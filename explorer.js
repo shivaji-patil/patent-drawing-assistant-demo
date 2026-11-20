@@ -1,11 +1,12 @@
-/* Answer explorer: every saved answer of the development question set, shown as the assistant returned it.
-   Data: data/demo.json, written by scripts/build_site.py from data/answers/qa_dev/. No server, no model calls. */
+/* Answer explorer: every saved answer of the blind and the development question sets, shown as the assistant
+   returned it, with what the scorer made of it. Data: data/demo.json, written by scripts/build_site.py from the
+   saved answers. No server, no model calls. */
 (function () {
   "use strict";
   var root = document.getElementById("explorer");
   if (!root) return;
   var SYSTEMS = [["ocr_lookup", "ocr_lookup", "no LLM"], ["text_only", "text_only", "LLM, text"], ["full", "full", "LLM, text + drawings"]];
-  var state = { patent: null, question: null, system: "full" };
+  var state = { set: 0, patent: null, question: null, system: "full" };
   var data = null;
 
   function el(tag, attrs, children) {
@@ -63,33 +64,14 @@
       el("figcaption", { text: "Sheet " + page + " (" + figures + "): " + cites.map(function (c) { return c.label_id; }).join(", ") })]);
   }
 
-  function verdict(question, answer) {
-    var bits = [];
-    if (!question.on_drawings) {
-      var invented = answer.parts.some(function (p) { return p.number === question.part_number; }) ||
-        answer.drawing_citations.some(function (c) { return c.part_number === question.part_number; });
-      bits.push(invented ? ["bad", "Treated a number the patent does not use as a part"] : ["good", "Named no part and cited no region for this unused number"]);
-      return bits;
-    }
-    bits.push(answer.name_correct ? ["good", "Name matches the gold"] : ["bad", "Name does not match the gold (" + question.gold_names.join(" / ") + ")"]);
-    var gold = 0, found = 0, perSheet = {};
-    Object.keys(question.gold_sheets).forEach(function (s) { gold += question.gold_sheets[s]; });
-    answer.drawing_citations.forEach(function (c) {
-      if (c.part_number === question.part_number) perSheet[c.sheet_page] = (perSheet[c.sheet_page] || 0) + 1;
-    });
-    Object.keys(perSheet).forEach(function (s) { found += Math.min(perSheet[s], question.gold_sheets[s] || 0); });
-    bits.push([found === gold ? "good" : (found ? "mid" : "bad"), found + " of " + gold + " places on the drawings found"]);
-    return bits;
-  }
-
   function render() {
-    var patent = data.patents[state.patent];
+    var patent = data.sets[state.set].patents[state.patent];
     var question = patent.questions[state.question];
     var answer = question.answers[state.system];
     var out = root.querySelector(".ex-out");
     out.textContent = "";
     out.appendChild(el("div", { class: "qa" }, [el("p", { class: "q", text: question.question }), el("p", { class: "a", text: answer.answer })]));
-    out.appendChild(el("p", { class: "ex-verdict" }, verdict(question, answer).map(function (bit) {
+    out.appendChild(el("p", { class: "ex-verdict" }, answer.verdicts.map(function (bit) {
       return el("span", { class: "tag " + bit[0], text: bit[1] });
     }).concat([el("span", { class: "tag", text: answer.seconds < 0.01 ? "under 0.01 s" : answer.seconds.toFixed(1) + " s" }),
       el("span", { class: "tag", text: answer.cost ? "$" + answer.cost.toFixed(2) + " list price" : "no model call" })])));
@@ -125,18 +107,27 @@
   function fillQuestions() {
     var select = root.querySelector("#ex-question");
     select.textContent = "";
-    data.patents[state.patent].questions.forEach(function (question, i) {
-      select.appendChild(el("option", { value: i, text: "Part " + question.part_number + (question.on_drawings ? "" : " (a number the patent does not use)") }));
+    data.sets[state.set].patents[state.patent].questions.forEach(function (question, i) {
+      select.appendChild(el("option", { value: i, text: question.label }));
     });
     state.question = Math.min(3, select.options.length - 1);
     select.value = state.question;
   }
 
+  function fillPatents() {
+    var select = root.querySelector("#ex-patent"), set = data.sets[state.set];
+    select.textContent = "";
+    Object.keys(set.patents).forEach(function (number) {
+      select.appendChild(el("option", { value: number, text: "US " + set.patents[number].pretty + " · " + set.patents[number].subject }));
+    });
+    state.patent = set.start_patent;
+    select.value = state.patent;
+    fillQuestions();
+  }
+
   function build() {
-    var patentSelect = el("select", { id: "ex-patent" }, Object.keys(data.patents).map(function (number) {
-      var p = data.patents[number];
-      return el("option", { value: number, text: "US " + p.pretty + " · " + p.subject });
-    }));
+    var setSelect = el("select", { id: "ex-set" }, data.sets.map(function (set, i) { return el("option", { value: i, text: set.title }); }));
+    var patentSelect = el("select", { id: "ex-patent" });
     var questionSelect = el("select", { id: "ex-question" });
     var systems = el("div", { class: "ex-systems", role: "group", "aria-label": "Answer system" }, SYSTEMS.map(function (s) {
       return el("button", { type: "button", "data-system": s[0], "aria-pressed": s[0] === state.system ? "true" : "false",
@@ -144,12 +135,12 @@
     }));
     root.textContent = "";
     root.appendChild(el("div", { class: "ex-controls" }, [
+      el("label", { for: "ex-set", text: "Set" }), setSelect,
       el("label", { for: "ex-patent", text: "Patent" }), patentSelect,
       el("label", { for: "ex-question", text: "Question" }), questionSelect, systems]));
     root.appendChild(el("div", { class: "ex-out", "aria-live": "polite" }));
-    state.patent = data.start_patent;
-    patentSelect.value = state.patent;
-    fillQuestions();
+    fillPatents();
+    setSelect.addEventListener("change", function () { state.set = +setSelect.value; fillPatents(); render(); });
     patentSelect.addEventListener("change", function () { state.patent = patentSelect.value; fillQuestions(); render(); });
     questionSelect.addEventListener("change", function () { state.question = +questionSelect.value; render(); });
     systems.addEventListener("click", function (event) {
