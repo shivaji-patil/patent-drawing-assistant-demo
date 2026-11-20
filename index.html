@@ -29,7 +29,7 @@
     <p class="note">Blind test of 20 November 2026: 8 patents never used before, 78 questions, plan written down before the sample was drawn, second version of the system.
     The gold was counted by four model counts that agree (three by Claude, one by OpenAI Codex). No person checked it. More under "How firm are these results?".</p>
     <p class="cta"><a href="brief.pdf">Two-page brief (PDF)</a></p>
-    <p class="note">Last updated <mark class="ts">20 Nov 2026, 18:04 UTC (20 Nov, 14:34 NST)</mark>.</p>
+    <p class="note">Last updated <mark class="ts">20 Nov 2026, 20:29 UTC (20 Nov, 16:59 NST)</mark>.</p>
   </div>
 </header>
 <main class="wrap">
@@ -40,12 +40,14 @@
     (<code>D5-23</code>: sheet 5, spot 23), and the description into numbered sentences (<code>T148</code>). Answers may only cite these.</li>
     <li><b>Three systems, one output format.</b> A lookup with no LLM, an LLM that sees only the text, and an LLM that also sees the label
     list and then has every cited drawing region checked against the image crop. Same scorer for all three.</li>
-    <li><b>Tested blind.</b> 78 questions in five forms on 8 patents nothing had touched, with three frozen versions of the system. The plan and every later change to it
+    <li><b>Tested blind, twice.</b> 78 questions on 8 patents, then 136 on 14 more (6 of them longer, 9 to 20 sheets), in five forms, with three frozen versions of the system. The plan and every later change to it
     were written down before any score existed, and all answers were sealed by hash before scoring.</li>
     <li><b>The LLM's value is in the text, not in finding labels.</b> It named 36/36 of the named parts (the lookup: 31/36) and found the part behind a name in 8/8
     questions (the lookup: 5/8). It found no more places on the drawings: 61/66 against the lookup's 62/66. Every region it returned for an asked part was correct.</li>
-    <li><b>Improvements built on development data did not transfer.</b> A reader change that raised the places found on development sheets from 80% to 89%, and another OCR engine that
-    reached 95%, found exactly as many places on the blind patents as the first version. The changed reader read the same 349/374 labels and added 10 false ones.</li>
+    <li><b>On short patents, improvements built on development data did not transfer.</b> A reader change that raised the places found on development sheets from 80% to 89%, and another OCR engine that
+    reached 95%, found as many places on the short blind patents as the first version.</li>
+    <li><b>On longer patents the OCR engine change did.</b> On the 6 longer patents the lookup with the new engine (v3) found 98/101 printed places, against 81 and 85 for the
+    earlier versions, and the full LLM system 94/101 against 82.</li>
     <li><b>What did transfer:</b> handling questions about one figure or two parts together. The first version's lookup cited the part on every sheet (16/22 and 14/28 regions correct);
     the second gets 16/16 and 14/14.</li>
     <li><b>A weakness the test exposed:</b> for parts the patent mentions without naming them, the LLM gave a name anyway in 5/6 cases.</li>
@@ -107,6 +109,43 @@
 </section>
 
 <section>
+  <h2>Second blind test: 14 more patents, 6 of them longer</h2>
+  <p>Drawn by the same rule from the patents left over, with 6 longer patents (9 to 20 sheets, 82 sheets) added: 115 sheets and 136 questions in the same five forms.
+  The three versions were the frozen ones of the first test, unchanged. Planned in writing before the sample was drawn, with every later change recorded before any answer existed;
+  all answers sealed by hash, scored once.</p>
+  <h3>Printed places of the asked parts found</h3>
+  <div class="scroll"><table>
+    <thead><tr><th></th><th>Lookup v1</th><th>v2</th><th>v3</th><th>LLM + drawings v1</th><th>v2</th><th>v3</th></tr></thead>
+    <tbody>
+      <tr><td>8 short patents (2-8 sheets)</td><td>75/82</td><td>75/82</td><td>76/82</td><td>68/82</td><td>68/82</td><td>70/82</td></tr>
+      <tr><td>6 longer patents (9-20 sheets)</td><td>81/101</td><td>85/101</td><td>98/101</td><td>79/101</td><td>82/101</td><td>94/101</td></tr>
+      <tr><td>Both</td><td>156/183</td><td>160/183</td><td>174/183</td><td>147/183</td><td>150/183</td><td>164/183</td></tr>
+      <tr><td>Short patents of both blind sets</td><td>137/148</td><td>137/148</td><td>138/148</td><td>129/148</td><td>129/148</td><td>131/148</td></tr>
+    </tbody>
+  </table></div>
+  <h3>The drawing reader on every label, recall / precision</h3>
+  <div class="scroll"><table>
+    <thead><tr><th></th><th>v1</th><th>v2</th><th>v3</th></tr></thead>
+    <tbody>
+      <tr><td>8 short patents (2-8 sheets)</td><td>89.1% / 92.6%</td><td>90.3% / 92.2%</td><td>94.2% / 87.1%</td></tr>
+      <tr><td>6 longer patents (9-20 sheets)</td><td>87.0% / 80.4%</td><td>88.7% / 79.3%</td><td>93.6% / 79.4%</td></tr>
+      <tr><td>Both</td><td>87.9% / 85.0%</td><td>89.3% / 84.1%</td><td>93.8% / 82.4%</td></tr>
+      <tr><td>Short patents of both blind sets</td><td>90.7% / 90.1%</td><td>91.5% / 89.0%</td><td>94.6% / 86.2%</td></tr>
+    </tbody>
+  </table></div>
+  <h3>What it shows</h3>
+  <ul>
+    <li><b>The new OCR engine (v3) pays off on longer patents</b>, mostly on three-digit labels, and not on one patent alone: leaving out any one of the longer patents, its lookup still finds 97% to 99% of the rest.
+    On short patents all three versions stay level, as in the first test.</li>
+    <li><b>The LLM's value is again in the text:</b> names 72/74 (lookup 64/74), the part behind a name 16/16 (lookup 13/16).
+    Every region the full system returned was correct (147/147, 150/150, 164/164 for v1, v2, v3).</li>
+    <li><b>The weakness of the first test did not recur:</b> a name was given for a part the text never names in 1/4 cases.</li>
+    <li><b>The gold was checked by models only.</b> Claude Fable and Claude Opus counted every label (a third look settled their 42 differences out of 1,263), and OpenAI Codex
+    counted the asked numbers separately and agreed on all 793. The person check planned for a random sample was done by Codex instead, so no person has checked this gold.</li>
+  </ul>
+</section>
+
+<section>
   <h2>One question, end to end</h2>
   <p>Patent US 12,012,563, a steam-cracking furnace. Answer from the full system (claude-opus-5-5), shortened here; nothing else is edited.</p>
   <div class="qa">
@@ -154,7 +193,7 @@ Where it appears on the drawings: the reader found label 26 once on each of FIGs
 
 <section>
   <h2>Try it: every question and answer</h2>
-  <p>All 360 saved answers of the blind set (second version) and of the development set (first version), exactly as each system returned them: the citations that
+  <p>All 768 saved answers of the second blind set (third version), the first blind set (second version) and the development set (first version), exactly as each system returned them: the citations that
   passed the checks, the ones that were rejected, the cited labels boxed on the sheets, and what the scorer made of the answer. Nothing runs when you click: the answers were
   generated once and stored.</p>
   <div id="explorer"><p class="small">Loading the saved answers…</p></div>
@@ -318,9 +357,9 @@ Where it appears on the drawings: the reader found label 26 once on each of FIGs
 <section>
   <h2>Next steps</h2>
   <ul>
-    <li>A person checks the gold of the blind set, or at least a sample of it.</li>
+    <li>A person checks the gold of the blind sets, or at least a sample of it.</li>
     <li>Check each cited box against the image, not only the count per sheet.</li>
-    <li>A blind set of longer patents (more than 8 sheets) and of drawings printed as a dot pattern, where the later versions are expected to differ.</li>
+    <li>Patents with more than 20 sheets, and drawings printed as a dot pattern; neither blind set tested them.</li>
     <li>Do not name a part the description does not name.</li>
   </ul>
 </section>
